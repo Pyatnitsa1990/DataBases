@@ -111,10 +111,9 @@ public class TopicRepositoryImpl implements TopicRepository {
         }
     }
 
-    public List<Topic> findAll(int topicId) {
+    public List<Topic> findAll() {
         try (connection;
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
-            preparedStatement.setInt(1, topicId);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return TopicMapper.mapToListTopic(resultSet);

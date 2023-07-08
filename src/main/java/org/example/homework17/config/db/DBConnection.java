@@ -1,7 +1,5 @@
 package org.example.homework17.config.db;
 
-import lombok.experimental.UtilityClass;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
