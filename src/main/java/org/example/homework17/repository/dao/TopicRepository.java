@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface TopicRepository {
 
-    boolean create(Topic topic);
+    int create(Topic topic);
 
     Topic findById(int id);
 
-    boolean remove(int id);
+    int remove(int id);
 
     int update(Topic topic);
     List<Topic> findAll();

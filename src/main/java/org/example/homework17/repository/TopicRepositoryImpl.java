@@ -1,5 +1,6 @@
 package org.example.homework17.repository;
 
+import org.example.homework17.config.db.DBConnection;
 import org.example.homework17.model.Topic;
 import org.example.homework17.repository.dao.TopicRepository;
 import org.example.homework17.mapper.TopicMapper;
@@ -9,13 +10,6 @@ import java.util.List;
 
 
 public class TopicRepositoryImpl implements TopicRepository {
-
-    private final Connection connection;
-
-    public TopicRepositoryImpl(Connection connection) {
-        this.connection = connection;
-    }
-
 
     private static final String CREATE =
             """
@@ -52,13 +46,12 @@ public class TopicRepositoryImpl implements TopicRepository {
             """;
 
     @Override
-    public boolean create(Topic topic) {
-        try (connection;
-             PreparedStatement preparedStatement = connection.prepareStatement(CREATE)) {
+    public int create(Topic topic) {
+        try (PreparedStatement preparedStatement = DBConnection.getInstance().prepareStatement(CREATE)) {
 
             preparedStatement.setString(1, topic.getName());
             preparedStatement.setInt(2, topic.getRating());
-            return preparedStatement.execute();
+            return preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -68,28 +61,22 @@ public class TopicRepositoryImpl implements TopicRepository {
     @Override
     public Topic findById(int topicId) {
 
-        try (connection;
-             PreparedStatement statement = this.connection.prepareStatement(FIND_BY_ID)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = DBConnection.getInstance().prepareStatement(FIND_BY_ID)) {
             statement.setInt(1, topicId);
+            ResultSet resultSet = statement.executeQuery();
 
-            return Topic.builder()
-                    .name(resultSet.getString("name"))
-                    .rating(resultSet.getInt("rating"))
-                    .id(resultSet.getInt("id"))
-                    .build();
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            return TopicMapper.mapToTopic(resultSet);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
     }
 
     @Override
-    public boolean remove(int id) {
-        try (connection;
-             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE)) {
+    public int remove(int id) {
+        try (PreparedStatement preparedStatement = DBConnection.getInstance().prepareStatement(REMOVE)) {
             preparedStatement.setInt(1, id);
-            return preparedStatement.execute();
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -97,8 +84,7 @@ public class TopicRepositoryImpl implements TopicRepository {
 
     @Override
     public int update(Topic topic) {
-        try (connection;
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);) {
+        try (PreparedStatement preparedStatement = DBConnection.getInstance().prepareStatement(UPDATE);) {
 
             preparedStatement.setString(1, topic.getName());
             preparedStatement.setInt(2, topic.getRating());
@@ -112,13 +98,11 @@ public class TopicRepositoryImpl implements TopicRepository {
     }
 
     public List<Topic> findAll() {
-        try (connection;
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL)) {
+        try (PreparedStatement preparedStatement = DBConnection.getInstance().prepareStatement(FIND_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return TopicMapper.mapToListTopic(resultSet);
-            }
-            return null;
+
+            return TopicMapper.mapToListTopic(resultSet);
+
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
 

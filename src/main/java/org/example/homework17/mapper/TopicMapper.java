@@ -15,7 +15,7 @@ public class TopicMapper {
     private static String RATING = "rating";
     private static String ID = "id";
 
-    public static Topic topicMapper(ResultSet resultSet) throws SQLException {
+    public static Topic mapToTopic(ResultSet resultSet) throws SQLException {
 
         return Topic.builder().
                 name(resultSet.getString(NAME)).
