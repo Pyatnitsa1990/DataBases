@@ -11,24 +11,28 @@ import java.util.List;
 
 @UtilityClass
 public class QuestionMapper {
-    private static final String NAME = "name";
+    private static final String TEXT = "text";
     private static final String ID = "id";
+    private static final String  TOPIC_ID ="topic_id";
 
 
     public static Question mapToQuestion(ResultSet resultSet) throws SQLException {
 
         return Question.builder()
-                .text(resultSet.getString(NAME))
+                .text(resultSet.getString(TEXT))
                 .id(resultSet.getInt(ID))
+                .topicId(resultSet.getInt(TOPIC_ID))
                 .build();
     }
 
     public static List<Question> mapToListQuestion(ResultSet resultSet) throws SQLException {
         List<Question> questions = new LinkedList<>();
+
         while (resultSet.next()) {
             questions.add(Question.builder()
-                    .text(resultSet.getString(NAME))
+                    .text(resultSet.getString(TEXT))
                     .id(resultSet.getInt(ID))
+                    .topicId(resultSet.getInt(TOPIC_ID))
                     .build());
         }
         return questions;
