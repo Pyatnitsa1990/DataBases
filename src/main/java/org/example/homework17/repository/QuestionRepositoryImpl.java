@@ -1,6 +1,8 @@
 package org.example.homework17.repository;
 
 import org.example.homework17.config.db.DBConnection;
+;
+import org.example.homework17.exception.QuestionException;
 import org.example.homework17.mapper.QuestionMapper;
 import org.example.homework17.model.Question;
 import org.example.homework17.repository.dao.QuestionRepository;
@@ -11,9 +13,14 @@ import java.util.List;
 
 public class QuestionRepositoryImpl implements QuestionRepository {
 
+    private static final String NOT_FOUND_BY_ID = "Question not found by id";
+    private static final String NOT_FOUND_BY_TOPIC_ID = "Question not found by id";
+    private static final String NOT_FOUND_BY_FIND_ALL = "Question not found ";
+    private static final String NOT_BEEN_CREATED = "Question not been created ";
+
     private static final String CREATE = """
-                    INSERT INTO question(text, topicId)
-                    VALUES (?, ?, ?)
+                    INSERT INTO question(text, topic_id)
+                    VALUES (?, ?)
             """;
 
     private static final String REMOVE = """
@@ -47,11 +54,12 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
         try (PreparedStatement preparedStatement = DBConnection.getInstance().prepareStatement(CREATE)) {
             preparedStatement.setString(1, question.getText());
+            preparedStatement.setInt(2, question.getTopic_id());
 
             return preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new QuestionException(NOT_BEEN_CREATED, ex);
         }
     }
 
@@ -64,8 +72,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
             return QuestionMapper.mapToQuestion(resultSet);
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new QuestionException(NOT_FOUND_BY_ID, ex);
         }
     }
 
@@ -77,8 +85,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
             ResultSet resultSet = statement.executeQuery();
 
             return QuestionMapper.mapToListQuestion(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new QuestionException(NOT_FOUND_BY_TOPIC_ID + topicId, ex);
         }
     }
 
@@ -88,8 +96,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
             ResultSet resultSet = statement.executeQuery();
 
             return QuestionMapper.mapToListQuestion(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new QuestionException(NOT_FOUND_BY_FIND_ALL, ex);
         }
     }
 
@@ -99,8 +107,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
             preparedStatement.setInt(1, id);
 
             return preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new QuestionException(NOT_FOUND_BY_ID, ex);
         }
     }
 
@@ -112,8 +120,8 @@ public class QuestionRepositoryImpl implements QuestionRepository {
 
             return preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

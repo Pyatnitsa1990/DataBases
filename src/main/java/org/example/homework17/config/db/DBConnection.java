@@ -7,8 +7,8 @@ import java.sql.SQLException;
 public class DBConnection {
 
     private static Connection connection;
-    private static final String name = "postgres";
-    private static final String password = "maestri";
+    private static final String NAME = "postgres";
+    private static final String PASSWORD = "maestri";
 
     private DBConnection() {
     }
@@ -18,7 +18,7 @@ public class DBConnection {
             synchronized (DBConnection.class) {
                 if (connection == null || connection.isClosed()) {
                     connection = DriverManager
-                            .getConnection("jdbc:postgresql://localhost:5432/questionarium", name, password);
+                            .getConnection("jdbc:postgresql://localhost:5432/postgres?currentSchema=questionarium", NAME, PASSWORD);
                 }
             }
         }
