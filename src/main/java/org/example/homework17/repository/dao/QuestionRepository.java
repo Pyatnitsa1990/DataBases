@@ -1,5 +1,7 @@
 package org.example.homework17.repository.dao;
 
+
+import org.example.homework17.exception.QuestionException;
 import org.example.homework17.model.Question;
 import java.util.List;
 

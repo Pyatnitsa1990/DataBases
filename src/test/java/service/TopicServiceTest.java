@@ -3,6 +3,7 @@ package service;
 import org.example.homework17.model.Topic;
 import org.example.homework17.repository.dao.TopicRepository;
 import org.example.homework17.service.TopicService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,6 +40,14 @@ public class TopicServiceTest extends BaseTest {
         service.findById(id);
 
         verify(repository, only()).findById(id);
+    }
+
+    @Test
+    public void findAll() {
+        when(repository.findAll())
+                .thenReturn(getLists());
+        int sizeExpected = 5;
+        Assertions.assertEquals(sizeExpected, getLists().size());
     }
 
     public List<Topic> getLists() {

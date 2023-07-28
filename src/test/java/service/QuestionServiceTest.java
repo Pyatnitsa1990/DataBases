@@ -42,15 +42,22 @@ public class QuestionServiceTest extends BaseTest {
         Question random = service.getRandomByTopicId(topicId);
         Assertions.assertNotNull(random);
     }
+
     @Test
     public void checkAdd() {
-        Question question = Question.builder().id(4).text("What is Mocking in the context of software testing, and how does it help in writing unit tests?").topicId(13).build();
+        Question question = Question
+                .builder()
+                .id(4)
+                .text("What is Mocking in the context of software testing, and how does it help in writing unit tests?")
+                .topic_id(13)
+                .build();
 
-        service.addQuestion(question);
+        service.createQuestion(question);
 
         verify(repository, only()).create(question);
 
     }
+
     @Test
     public void checkRemove() {
         int id = 4;
@@ -59,12 +66,21 @@ public class QuestionServiceTest extends BaseTest {
         verify(repository, only()).remove(id);
 
     }
+
+    @Test
+    public void findAll() {
+        when(repository.findAll())
+                .thenReturn(getLists());
+        int sizeExpected = 4;
+        Assertions.assertEquals(sizeExpected, getLists().size());
+    }
+
     public List<Question> getLists() {
         return List.of(
-                Question.builder().id(0).text("What is the difference between JDK and JRE?").topicId(2).build(),
-                Question.builder().id(1).text("Explain the differences between ArrayList and LinkedList in Java?").topicId(4).build(),
-                Question.builder().id(2).text("What is the difference between the equals() and == operators in Java?").topicId(4).build(),
-                Question.builder().id(3).text("What is the purpose of the final keyword in Java?").topicId(4).build()
+                Question.builder().id(0).text("What is the difference between JDK and JRE?").topic_id(2).build(),
+                Question.builder().id(1).text("Explain the differences between ArrayList and LinkedList in Java?").topic_id(4).build(),
+                Question.builder().id(2).text("What is the difference between the equals() and == operators in Java?").topic_id(4).build(),
+                Question.builder().id(3).text("What is the purpose of the final keyword in Java?").topic_id(4).build()
 
         );
     }

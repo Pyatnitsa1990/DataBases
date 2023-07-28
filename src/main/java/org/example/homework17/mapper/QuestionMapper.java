@@ -13,7 +13,7 @@ import java.util.List;
 public class QuestionMapper {
     private static final String TEXT = "text";
     private static final String ID = "id";
-    private static final String  TOPIC_ID ="topic_id";
+    private static final String TOPIC_ID = "topic_id";
 
 
     public static Question mapToQuestion(ResultSet resultSet) throws SQLException {
@@ -21,7 +21,7 @@ public class QuestionMapper {
         return Question.builder()
                 .text(resultSet.getString(TEXT))
                 .id(resultSet.getInt(ID))
-                .topicId(resultSet.getInt(TOPIC_ID))
+                .topic_id(resultSet.getInt(TOPIC_ID))
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class QuestionMapper {
             questions.add(Question.builder()
                     .text(resultSet.getString(TEXT))
                     .id(resultSet.getInt(ID))
-                    .topicId(resultSet.getInt(TOPIC_ID))
+                    .topic_id(resultSet.getInt(TOPIC_ID))
                     .build());
         }
         return questions;

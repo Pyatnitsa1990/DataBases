@@ -23,23 +23,23 @@ public class QuestionService {
     }
 
     public Question getRandomByTopicId(int topicId) {
-        List <Question> questions = questionRepository.findAll();
+        List<Question> questions = questionRepository.findAll();
 
         List<Question> filteredByTopicId = new ArrayList<>();
-        for(Question qs:questions){
-            if(qs.getTopicId() == topicId){
+        for (Question qs : questions) {
+            if (qs.getTopic_id() == topicId) {
                 filteredByTopicId.add(qs);
             }
         }
         return getQuestion(filteredByTopicId);
     }
 
-    public int addQuestion(Question question) {
-        return this.questionRepository.create(question);
+    public void createQuestion(Question question) {
+         this.questionRepository.create(question);
     }
 
-    public int removeById(int questionId) {
-        return this.questionRepository.remove(questionId);
+    public void removeById(int questionId) {
+        this.questionRepository.remove(questionId);
     }
 
     private static Question getQuestion(List<Question> questions) {
@@ -47,5 +47,8 @@ public class QuestionService {
         return questions.get(randomValue);
     }
 
+    public List<Question> findAll() {
+        return questionRepository.findAll();
+    }
 
 }
